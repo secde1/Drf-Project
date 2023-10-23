@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # custom
     'api',
+    'accounts',
 
     # third-party
     'rest_framework',
