@@ -59,3 +59,19 @@ Django REST framework (DRF) - это мощный инструмент для с
     и надежной связи в любом масштабе. Вы можете легко реализовать и изменить его, обеспечивая прозрачность
     и межплатформенную переносимость любой системы API.
 
+
+docker
+sudo docker build -t restproject-app .
+sudo docker run -p 8080:8000 restproject-app
+sudo ps -a
+sudo docker logs (id_con)
+sudo docker rm (id_con)
+sudo docker start (id_con)
+
+                                                                                        sudo lsof -i :8000
+
+celery
+celery -A RestProject worker --loglevel=info
+
+redis-server
+redis-cli shutdown

@@ -1,12 +1,11 @@
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, CreateAPIView, GenericAPIView
+from rest_framework.views import APIView
 
 from accounts.permissions import IsAdminPermission
 from .models import Blog
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from .serializers import BlogSerializer, BlogSerializerForPost
+from .serializers import BlogSerializerForPost, SubscriberSerializer
 
 
 @api_view(['GET'])
@@ -14,26 +13,34 @@ def hello(request):
     return Response({'message': 'Hello World!'})
 
 
-class BlogAPIView(APIView):
-    permission_classes = (IsAuthenticated,)
+class UpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializerForPost
+    permission_classes = (IsAdminPermission) # noqa
 
 
-    def get(self, request): # noqa
-        blogs = Blog.objects.all().order_by('-created_at')
-        blog_serializer = BlogSerializer(blogs, many=True)
-        return Response(blog_serializer.data) # noqa
+class AddBlogView(CreateAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializerForPost
+    permission_classes = (IsAdminPermission) # noqa
 
 
-class AddBlogAPIView(APIView):
-    permission_classes = (IsAdminPermission,)
+class BlogAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializerForPost
+    permission_classes = (IsAdminPermission) # noqa
+
+
+class SubscriberAPIView(GenericAPIView):
+    permission_classes = ()
+    serializer_class = SubscriberSerializer
 
     def post(self, request): # noqa
-        request.data._mutable = True
-        data = request.data
-        data['user_id'] = request.user.id
-        blog_serializer = BlogSerializerForPost(data=data)
-        blog_serializer.is_valid(raise_exception=True)
-        blog_serializer.save()
-        return Response(blog_serializer.data)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
 
 

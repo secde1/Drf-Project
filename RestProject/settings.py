@@ -24,9 +24,9 @@ SECRET_KEY = 'django-insecure-(jo6=-)da&f*2f0y0*i4y0&jc!6=^_wk=xp&4t4&081h*)9-mv
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
+#
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.10.3.37', '127.0.0.1', '127.0.0.1:8080']
 
 # Application definition
 
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
 
     # custom
     'api',
@@ -79,6 +80,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'RestProject.wsgi.application'
 
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -136,3 +146,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+CELERY_RESULT_BACKEND = 'redis://localhost:6380/0'
+CELERY_BROKER_URL = 'redis://localhost:6380/0'
+CELERY_TIMEZONE = TIME_ZONE
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'turgunovjamshid32@gmailcom'
+EMAIL_HOST_PASSWORD = ''

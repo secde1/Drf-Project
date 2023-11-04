@@ -1,0 +1,81 @@
+# class ProductView(APIView):
+#     permission_classes = (IsAuthenticated,)
+#
+#     def get(self, request): # noqa
+#         product = Product.objects.all()
+#         product_serializer = ProductSerializer(product, many=True)
+#         return Response(product_serializer.data)
+
+
+
+# class ProductList(APIView):
+#     def get(self, request):
+#         products = Product.objects.all()
+#         serializer = ProductSerializer(products, many=True)
+#         return Response(serializer.data)
+#
+#     def post(self, request):
+#         serializer = ProductSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# ViewSets sizga ListView va DetailView-ni bitta ko'rinishda birlashtirish imkonini beradi.
+# Shunday qilib, ikkala amalni bajarish uchun ikki xil ko'rinish kerak emas.
+
+# class ProductViewSet(viewsets.ModelViewSet): # noqa
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+#
+#     @action(detail=False, methods=['POST'])
+#     def add_product(self, request):
+#         serializer = ProductSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class AddProductView(APIView):
+
+    def post(self, request, format=None):
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        ######################################################################################################
+        views.py
+class ProductViewSet(viewsets.ModelViewSet): # noqa
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    @action(detail=False, methods=['POST'])
+    def add_product(self, request):
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+serializers.py
+class ProductSerializer(ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+urls.py
+from django.urls import path
+from .views import CategoryView, ProductViewSet
+
+
+urlpatterns = [
+    path('category', CategoryView.as_view(), name='category'),
+    path('add-product', ProductViewSet.as_view({'post': 'add_product'}), name='add-product'),
+    # path('add', ProductViewSet.as_view({'get': 'add_product'}), name='add-product'),
+]

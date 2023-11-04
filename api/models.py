@@ -1,6 +1,7 @@
 from django.db import models
 
-class Hashtag(models.Model): # noqa
+
+class Hashtag(models.Model):  # noqa
     name = models.CharField(max_length=255)
 
     def __str__(self):
@@ -16,4 +17,10 @@ class Blog(models.Model):
     def __str__(self):
         return self.title
 
- 
+
+class Subscriber(models.Model):
+    email = models.EmailField(unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
