@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-(jo6=-)da&f*2f0y0*i4y0&jc!6=^_wk=xp&4t4&081h*)9-mv
 DEBUG = True
 #
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['10.10.3.37', '127.0.0.1', '127.0.0.1:8080']
+ALLOWED_HOSTS = ['10.10.3.37', '127.0.0.1', '127.0.0.1']
 
 # Application definition
 
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # custom
     'api',
     'accounts',
+    'one_id',
 
     # third-party
     'rest_framework',
@@ -148,8 +149,11 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CELERY_RESULT_BACKEND = 'redis://localhost:6380/0'
-CELERY_BROKER_URL = 'redis://localhost:6380/0'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6380/0'
+# CELERY_BROKER_URL = 'redis://localhost:6380/0'
+
+CELERY_RESULT_BACKEND = 'redis://redis:6380/0'
+CELERY_BROKER_URL = 'redis://redis:6380/0'
 CELERY_TIMEZONE = TIME_ZONE
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
